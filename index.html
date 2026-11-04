@@ -588,7 +588,17 @@ window.addEventListener('load',function(){ loadBirthdaySong(); });
 document.addEventListener('pointerdown',function(event){
   if(!birthdaySongStarted && !event.target.closest('#songToggle')) loadBirthdaySong();
 },{capture:true});
+// Automatically remove broken photo cards in Interface 5
+document.addEventListener('error', function(event) {
+    const img = event.target;
 
+    if (
+        img.tagName === 'IMG' &&
+        img.closest('#p5 .story-item')
+    ) {
+        img.closest('.story-item').remove();
+    }
+}, true);
 </script>
 </body>
 </html>
