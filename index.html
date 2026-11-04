@@ -488,53 +488,75 @@ function showScene(name){
   window.scrollTo({top:0,behavior:'smooth'});
   if(name==='garden')createMiniBlossoms();
 }
-function createMiniBlossoms(){
-  const canopy=document.querySelector('.mini-flower-canopy');
-  if(!canopy || canopy.dataset.grown==='yes') return;
-  canopy.dataset.grown='yes';
-  const originals=[...canopy.querySelectorAll('img')];
-  if(!originals.length) return;
+function createMiniBlossoms() {
+    const canopy = document.querySelector('.mini-flower-canopy');
 
-  // Dense flower canopy: preserve the tree silhouette and branch structure,
-  // replacing the leaf-like crown with many of the three supplied flower assets.
-  const placements=[];
-  const rows=25;
-  for(let r=0;r<rows;r++){
-    const y=5+r*2.45;
-    // Crown widens toward its middle and narrows near the top and lower edge.
-    const t=r/(rows-1);
-    const halfWidth=8+38*Math.sin(Math.PI*(0.12+t*0.82));
-    const left=50-halfWidth;
-    const right=50+halfWidth;
-    const step=5.25;
-    for(let x=left+2.5;x<right-1;x+=step){
-      const jitterX=(Math.random()-0.5)*3.4;
-      const jitterY=(Math.random()-0.5)*2.2;
-      const size=(5.2+Math.random()*3.5)/1.2;
-      placements.push([Math.max(1,Math.min(94,x+jitterX)),Math.max(4,Math.min(65,y+jitterY)),size,(Math.random()*34-17)]);
+    if (!canopy || canopy.dataset.grown === 'yes') return;
+
+    const originals = [...canopy.querySelectorAll('.mini-flower-source')];
+
+    if (!originals.length) return;
+
+    canopy.dataset.grown = 'yes';
+
+    let flowers = [];
+
+    // FIRST: 32 BIG FLOWERS
+    for (let i = 0; i < 32; i++) {
+        const x = 10 + Math.random() * 80;
+        const y = 12 + Math.random() * 70;
+        const size = 8 + Math.random() * 3;
+
+        flowers.push({
+            x, y, size,
+            rotation: Math.random() * 50 - 25,
+            delay: 0.08 + i * 0.045
+        });
     }
-  }
-  // Extra flowers fill the crown gaps for a lush, abundant look.
-  for(let i=0;i<145;i++){
-    const y=7+Math.random()*57;
-    const t=(y-7)/54;
-    const halfWidth=8+38*Math.sin(Math.PI*(0.12+t*0.82));
-    const x=50+(Math.random()*2-1)*(halfWidth-3);
-    placements.push([Math.max(1,Math.min(94,x)),y,(4.8+Math.random()*3.2)/1.2,(Math.random()*36-18)]);
-  }
-  placements.forEach((pos,i)=>{
-    const source=originals[i%originals.length];
-    const flower=source.cloneNode(true);
-    flower.classList.remove('mini-flower-source');
-    flower.style.left=pos[0]+'%';
-    flower.style.top=pos[1]+'%';
-    flower.style.width=pos[2]+'%';
-    flower.style.setProperty('--flower-rot',pos[3]+'deg');
-    flower.style.setProperty('--bloom-delay',(0.12+i*0.018).toFixed(2)+'s');
-    flower.style.zIndex=String(2+(i%4));
-    flower.alt=''; flower.setAttribute('aria-hidden','true');
-    canopy.appendChild(flower);
-  });
+
+    // SECOND: MANY SMALL FLOWERS
+    let smallIndex = 0;
+
+    for (let r = 0; r < 25; r++) {
+        const y = 5 + r * 2.45;
+
+        for (let x = 5; x <= 95; x += 5.25) {
+            if (Math.random() > 0.88) continue;
+
+            flowers.push({
+                x: x + (Math.random() * 2 - 1),
+                y: y + (Math.random() * 2 - 1),
+                size: 3 + Math.random() * 2.5,
+                rotation: Math.random() * 50 - 25,
+                delay: 1.65 + smallIndex * 0.018
+            });
+
+            smallIndex++;
+        }
+    }
+
+    // CREATE ALL FLOWERS
+    flowers.forEach((pos, i) => {
+        const source = originals[i % originals.length];
+        const flower = source.cloneNode(true);
+
+        flower.classList.remove('mini-flower-source');
+        flower.classList.add('mini-flower');
+
+        flower.style.left = pos.x + '%';
+        flower.style.top = pos.y + '%';
+        flower.style.width = pos.size + '%';
+
+        flower.style.setProperty('--flower-rot', pos.rotation + 'deg');
+        flower.style.setProperty('--bloom-delay', pos.delay + 's');
+
+        flower.style.zIndex = i < 32 ? '5' : '6';
+
+        flower.alt = '';
+        flower.setAttribute('aria-hidden', 'true');
+
+        canopy.appendChild(flower);
+    });
 }
 
 
