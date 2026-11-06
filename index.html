@@ -664,7 +664,7 @@ function createMiniBlossoms() {
         flower.style.position = 'absolute';
         flower.style.left = pos.x + '%';
         flower.style.top = pos.y + '%';
-        flower.style.width = pos.size + '%';
+        flower.style.setProperty('width', pos.size + '%', 'important');
         flower.style.height = 'auto';
 
         flower.style.setProperty(
