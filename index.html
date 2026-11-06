@@ -86,7 +86,28 @@ img{max-width:100%;height:auto}
 @keyframes miniHalo{50%{transform:scale(1.2);opacity:.8}}@keyframes miniBeat{35%{transform:scale(1.1)}60%{transform:scale(1.03)}78%{transform:scale(1.13)}}@keyframes miniHit{to{transform:scale(0);opacity:0}}@keyframes miniStrike{10%{opacity:1}80%{left:calc(50% - 70px);opacity:1}100%{left:calc(50% - 60px);opacity:0}}@keyframes miniBurst{to{opacity:0;transform:translate(-50%,-50%) scale(9)}}@keyframes miniSparkle{50%{transform:rotate(12deg) scale(1.15)}}@keyframes miniBlink{to{filter:brightness(1.8);text-shadow:0 0 18px currentColor}}
 
 
-.mini-flower-canopy img{transform-origin:center;animation:flowerGrow .9s cubic-bezier(.2,.75,.25,1) both; animation-delay:var(--bloom-delay,0s)}
+.mini-flower-canopy img{
+    transform-origin:center center;
+    animation:flowerGrow .85s cubic-bezier(.18,.78,.25,1) both;
+    animation-delay:var(--bloom-delay,0s);
+    will-change:transform,opacity;
+    backface-visibility:hidden;
+}
+
+@keyframes flowerGrow{
+    0%{
+        transform:scale(.02) rotate(var(--flower-rot,0deg));
+        opacity:0;
+    }
+    65%{
+        transform:scale(1.13) rotate(var(--flower-rot,0deg));
+        opacity:1;
+    }
+    100%{
+        transform:scale(1) rotate(var(--flower-rot,0deg));
+        opacity:.98;
+    }
+}
 @keyframes flowerGrow{0%{transform:scale(.04) rotate(var(--flower-rot,0deg));opacity:0}70%{transform:scale(1.08) rotate(var(--flower-rot,0deg));opacity:1}100%{transform:scale(1) rotate(var(--flower-rot,0deg));opacity:.97}}
 
 #songToggle{position:fixed;top:14px;right:14px;z-index:999999;width:48px;height:48px;border:1px solid #ffffffbb;border-radius:50%;background:linear-gradient(135deg,#8f5aa8,#d77fa8);color:#fff;font:700 25px Arial,sans-serif;box-shadow:0 8px 24px #0004;cursor:pointer;display:grid;place-items:center}
